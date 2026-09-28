@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "bmarks",
+  "author": "Fabio Bonelli",
+  "version": "0.1.1",
+  "description": "Every bookmark on one page, by folder or by site, with a check for dead links",
+  "icons": {
+    "48": "icons/bmarks.svg",
+    "96": "icons/bmarks.svg"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{0d2d92a9-08a2-463f-bfe1-888fe313990f}",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "permissions": [
+    "storage",
+    "bookmarks"
+  ],
+  "optional_host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_title": "Bookmarks",
+    "default_icon": "icons/bmarks.svg"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  }
+}

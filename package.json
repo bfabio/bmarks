@@ -1,0 +1,19 @@
+{
+  "name": "bmarks",
+  "version": "0.1.1",
+  "private": true,
+  "description": "Firefox add-on: every bookmark on one page",
+  "author": "Fabio Bonelli",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test '**/*.test.js'",
+    "lint": "web-ext lint",
+    "sign": "./scripts/sign unlisted",
+    "start": "web-ext run --firefox-profile ~/.cache/bmarks-profile --profile-create-if-missing --keep-profile-changes",
+    "submit": "./scripts/sign listed"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1",
+    "web-ext": "^10.6.0"
+  }
+}

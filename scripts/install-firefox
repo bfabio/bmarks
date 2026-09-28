@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+
+root=$(cd "$(dirname "$0")/.." && pwd -P)
+id=$(node -p 'require(process.argv[1]).browser_specific_settings.gecko.id' "$root/manifest.json")
+firefox='{ec8030f7-c20a-464f-9b0e-13a3a9e97384}'
+proxy="/usr/share/mozilla/extensions/$firefox/$id"
+
+# Fedora builds Firefox with MOZ_UNSIGNED_SYSTEM_SCOPE: an add-on
+# registered in the system directory runs without an AMO signature.
+printf '%s\n' "$root" | sudo tee "$proxy" > /dev/null
+
+profiles="$HOME/.mozilla/firefox"
+profile=$(awk -F= '/^\[Install/ { install = 1 } install && $1 == "Default" { print $2; exit }' "$profiles/profiles.ini")
+if [ -z "$profile" ]; then
+  echo "no [Install] section in $profiles/profiles.ini" >&2
+  exit 1
+fi
+
+# Firefox skips the system directory at startup unless this pref
+# names its scope (8), so a new proxy file would wait for the next
+# Firefox update to be noticed.
+pref='user_pref("extensions.startupScanScopes", 8);'
+userjs="$profiles/$profile/user.js"
+grep -qxF "$pref" "$userjs" 2>/dev/null || printf '%s\n' "$pref" >> "$userjs"
+
+echo "$proxy -> $root"
+echo "$userjs: $pref"
+echo "restart Firefox to load $id"
